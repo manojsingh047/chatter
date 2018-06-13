@@ -1,0 +1,222 @@
+/* from style.css */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
+}
+
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: rgb(67, 74, 84);
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+
+    /*transition: 0.3s ease-out;*/
+}
+
+body > div {
+    height: 100%;
+}
+.dis-flex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#main-container{
+    background-color: #fff;
+    width: 400px;
+    height: 92%;
+    max-height: 620px;
+    transition: 0.3s ease-out;
+    border-radius: 5px;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+    animation: fadein 1s;
+}
+#main-container > div{
+    background-color: #fff;
+}
+#chats-container{
+    padding: 7px;
+    background-color: #fff;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 91%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    /*height: 52%;*/
+}
+#chats-container .chat {
+    margin: 5px 0;
+    width: 80%;
+}
+#chats-container .msg{
+    border-top-left-radius: 1.3em;
+    border-top-right-radius: 1.3em;
+    border-bottom-left-radius: 1.3em;
+    border-bottom-right-radius: 1.3em;
+    padding: 12px;
+    font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+#chats-container .bot-chat span{
+    color: #333;
+    border-top-left-radius: 0;
+
+    background-color: #f1f1f1;
+}
+#chats-container .my-chat span{
+    color: #fff;
+    border-top-right-radius: 0;
+    background-color: #0084ff;
+}
+#chats-container .my-chat{
+    justify-content: flex-end;
+    margin-left: auto;
+}
+#chats-container .bot-chat{
+    justify-content: flex-start;
+    margin-right: auto;
+}
+#input-container{
+    height: 8%;
+}
+
+#input-container #input-box{
+    position: relative;
+    width: 97%;
+    margin: 0 auto;
+}
+#input-container #input-box input{
+    background-color: rgb(241, 241, 241);
+    padding: 12px 6px 12px 20px;
+    font-size: 18px;
+    outline: none;
+    border-radius: 24px;
+    box-shadow: 1px 1px 4px grey;
+    border: none;
+    margin: 0 auto;
+    width: 100%;
+    display: block;
+    cursor: pointer;
+}
+
+
+#input-container #input-box i{
+    font-size: 22px;
+    color: #777;
+}
+
+#input-container #input-box i.active{
+    color: #0084ff;
+}
+
+#input-container #input-box #plane-box{
+    position: absolute;
+    right: 0px;
+    top: 0;
+    padding: 11px 15px 11px 10px;
+}
+
+
+
+#utility-container{
+    display: none;
+    /*height: 42%;*/
+}
+
+div#wave {
+    position: relative;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+div#wave .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 3px;
+    background: #303131;
+    animation: wave 1.3s linear infinite;
+}
+div#wave .dot:nth-child(2) {
+    animation-delay: -1.1s;
+}
+div#wave .dot:nth-child(3) {
+    animation-delay: -0.9s;
+}
+
+@keyframes wave {
+    0%, 60%, 100% {
+        transform: initial;
+    }
+    30% {
+        transform: translateY(-10px);
+    }
+}
+
+.wheeler{
+    /*border: 1px solid red;*/
+}
+::-webkit-scrollbar
+{
+    position: absolute;
+    width: 8px;  /* for vertical scrollbars */
+    height: 6px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.4);
+}
+
+.test-cases{
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    background-color: #0084ff;
+    cursor: pointer;
+    border-radius: 50px;
+    box-shadow: 1px 1px 4px grey;
+    /* border-width: 0px; */
+    width: 80%;
+    margin:10px auto;
+    padding: 10px;
+    border: 3px solid #0084ff;
+    transition-duration: 0.4s;
+}
+.selected-test{
+    background-color: #FF9700;
+    border-color: #FF9700;
+}
+.test-cases:hover{
+    border: 3px solid #0084ff;
+    background: #fff;
+    color: #0084ff ;
+    transition-duration: 0.4s;
+}
+
+.test-cases:first-child{
+    margin-top: 20px;
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+:-ms-input-placeholder { /* Microsoft Edge */
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}

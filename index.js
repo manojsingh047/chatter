@@ -11,6 +11,7 @@ $(document).ready(function () {
 
 
     function DataModel() {
+
         let testCases = [
             new TestCaseModel("ip_date", "Date Test"),
             new TestCaseModel("ip_time", "Time Test"),
@@ -21,7 +22,7 @@ $(document).ready(function () {
             "Hey There",
             "How are you doing?",
             "How are you doing1?",
-            "How are you doing2?",
+            "How are you doing1?"
         ];
 
 
@@ -54,6 +55,12 @@ $(document).ready(function () {
             },
             getActiveTestCase: function () {
                 return testCases.find(testCase => testCase.isSelected);
+            },
+            removeTestCase: function () {
+                let testCaseIndex = testCases.findIndex(
+                    testCase => this.getActiveTestCase().id === testCase.id);
+
+                this.getTestCases().splice(testCaseIndex,1);
             },
 
         };
@@ -89,20 +96,20 @@ $(document).ready(function () {
             try {
                 let result = await promise;
                 utilityView.renderUtilitySelectors(result);
-                console.log(result);
             }
             catch (err) {
                 console.error(err);
             }
-        }
-
-
+        },
     };
 
     function UtilityView() {
         this.utilityContainerEle = "#utility-container";
+        this.casesBoxEle = "#utility-container #cases-box";
+        this.mobiContainerEle = "#mobi-container";
         this.shouldToggleUtility = false;
         this.isUtilityExpanded = false;
+        this.isScrolleOn = false;
 
     }
 
@@ -110,26 +117,48 @@ $(document).ready(function () {
     UtilityView.prototype.expandUtilityContainer = function () {
         this.isUtilityExpanded = true;
         $(chatView.chatContainerEle).animate({
-            "height": "50%"
+            "height": "60%"
         }, () => {
             $(this.utilityContainerEle).css({"display": "block"});
         });
 
     };
 
+    UtilityView.prototype.showMobiContainer = function () {
+            $(this.mobiContainerEle).css({"display": "block"});
+    };
+
+    UtilityView.prototype.hideMobiContainer = function () {
+            $(this.mobiContainerEle).css({"display": "none"});
+    };
+
 
     UtilityView.prototype.hideUtilityContainer = function () {
         this.isUtilityExpanded = false;
         $(this.utilityContainerEle).css({"display": "none"});
-        // $(chatView.chatContainerEle).animate({
-        //     "height": "91%"
-        // }, 300);
+        // $(this.utilityContainerEle).css({"height": "0"});
+        $(chatView.chatContainerEle).animate({
+            "height": "91%"
+        }, 300);
+    };
+
+    UtilityView.prototype.hideCasesBox = function () {
+        $(this.casesBoxEle).css({"display": "none"});
+    };
+
+    UtilityView.prototype.showCasesBox = function () {
+        $(this.casesBoxEle).css({"display": "block"});
     };
 
     UtilityView.prototype.attachUtilityToggler = function () {
         $(inputView.inputContainerEle).on('click', () => {
             if (this.canToggleUtility()) {
-                this.isUtilityExpanded ? this.hideUtilityContainer() : this.expandUtilityContainer();
+
+                if(this.isUtilityExpanded){
+                    this.hideUtilityContainer();
+                } else{
+                    this.expandUtilityContainer();
+                }
 
             }
         });
@@ -145,53 +174,88 @@ $(document).ready(function () {
 
 
     UtilityView.prototype.renderUtilitySelectors = function (testCases) {
-        this.shouldToggleUtility = true;   //todo -- check this
+        this.shouldToggleUtility = true;
+
+        let testCasesHtml = "";
+
+        if(testCases.length === 0){
+            this.hideUtilityContainer();
+            this.shouldToggleUtility = false;
+            return;
+        }
 
         testCases.forEach((testCase) => {
-            $(this.getTestCasesHtml(testCase)).appendTo(this.utilityContainerEle);
+            testCasesHtml += this.getTestCasesHtml(testCase);
         });
+
+        $(this.casesBoxEle).html(testCasesHtml);
 
         this.attachTestCasesEvent();
         this.attachTestSendEvent();
         this.expandUtilityContainer();
+        this.showCasesBox();
     };
 
     UtilityView.prototype.attachTestSendEvent = function () {
 
         $(inputView.sendBoxEle).on('click',(event) => {
             event.stopPropagation();
-
-            if(!inputView.inputEleIsActive){
+            if($(inputView.inputEle).val().length === 0){
                 return false;
             }
-            console.log('ok');
-            this.showScroller();
+
+            if(this.isScrolleOn){
+                dataModel.removeTestCase();
+                this.renderUtilitySelectors(dataModel.getTestCases());
+                this.hideMobiContainer();
+            }else{
+                this.hideCasesBox();
+                this.renderScroller();
+            }
+            this.isScrolleOn = !this.isScrolleOn;
+
+
+            chatView.renderMyMsgs($(inputView.inputEle).val());
+            inputView.clearInputVal();
+
         });
-
-
     };
 
+
+
+
     UtilityView.prototype.attachTestCasesEvent = function () {
-        $(this.utilityContainerEle + ' .test-cases').on('click', function () {
+        $(this.casesBoxEle + ' .test-cases').on('click', function () {
             $(this).toggleClass("selected-test");
             utilityView.updateTestCasesState(this.id);
             inputView.updateSendState();
         });
     };
 
+    UtilityView.prototype.renderScroller = function () {
 
-    UtilityView.prototype.showScroller = function () {
-        console.log(dataModel.getActiveTestCase());
+        chatView.renderBotLoader();
+        utilityView.showMobiContainer();
+        chatView.removeBotLoader();
 
-        this.hideUtilityContainer();
-        $(function () {
-            $("#scroller").mobiscroll().time();
-        });
+        let curTestCase = dataModel.getActiveTestCase();
+        switch (curTestCase.id){
+            case "ip_date" :
+                $("#scroller").mobiscroll().date();
+                break;
+
+            case "ip_time" :
+                $("#scroller").mobiscroll().time();
+                break;
+
+            case "ip_datetime" :
+                $("#scroller").mobiscroll().datetime();
+                break;
+        }
+
+        $('#scroller').mobiscroll('show');
 
     };
-
-
-
 
     UtilityView.prototype.updateTestCasesState = function (id) {
         dataModel.toggleSelected(id);
@@ -204,7 +268,7 @@ $(document).ready(function () {
     UtilityView.prototype.removeSelectedFromCase = function (id) {
         dataModel.getTestCases().forEach(testCase => {
             if(testCase.id !== id){
-                $(this.utilityContainerEle + ' ' + '#' + testCase.id).removeClass("selected-test");
+                $(this.casesBoxEle + ' ' + '#' + testCase.id).removeClass("selected-test");
             }
         });
     };
@@ -217,6 +281,10 @@ $(document).ready(function () {
         this.sendEle = "#input-container #plane-box i";
         this.inputEleIsActive = false;
     }
+
+    InputView.prototype.clearInputVal = function () {
+        $(this.inputEle).val('');
+    };
 
     InputView.prototype.updateSendState = function () {
         this.inputEleIsActive = $(this.inputEle).val().length > 0;
@@ -260,6 +328,25 @@ $(document).ready(function () {
         });
     };
 
+    ChatView.prototype.getMyMsgHtml = function (msg) {
+        return `<div class="chat my-chat dis-flex">
+                <span class="msg">${msg}</span>
+            </div>`;
+    };
+
+    ChatView.prototype.renderMyMsgs = function (msg) {
+
+        if(msg.length === 0)
+            return false;
+
+        $(this.getMyMsgHtml(msg)).hide().appendTo(this.chatContainerEle).fadeIn(500);
+        this.scrollToBottom(this.chatContainerEle);
+    };
+
+    ChatView.prototype.scrollToBottom = function (ele) {
+        $(ele).animate({ scrollTop: $(ele).prop("scrollHeight") });
+    };
+
     ChatView.prototype.renderBotLoader = function () {
         let loaderHtml = `<div class="chat bot-chat dis-flex">
                 <span class="msg">
@@ -280,12 +367,14 @@ $(document).ready(function () {
     };
 
 
-    mobiscroll.settings = {
-        theme: 'ios-dark',
-        cssClass: "wheeler",
-        // context: '#utility-container'
-        context: '#mobi-container'
-    };
+    (function () {                          //Set Global Settings for mobiscroll
+        mobiscroll.settings = {
+            theme: 'ios-dark',
+            cssClass: "wheeler",
+            context: '#mobi-container',
+            buttons:[]
+        };
+    }());
 
 
     let dataModel = new DataModel();

@@ -3,19 +3,43 @@
 
 $(document).ready(function () {
 
-    function TestCaseModel(id, name) {
+    function TestCaseModel(id, name, isSelected, options) {
         this.id = id;
         this.name = name;
-        this.isSelected = false;
+        this.isSelected = isSelected;
+        this.options = options
     }
 
 
     function DataModel() {
 
+        let now = new Date();
+
         let testCases = [
-            new TestCaseModel("ip_date", "Date Test"),
-            new TestCaseModel("ip_time", "Time Test"),
-            new TestCaseModel("ip_datetime", "Date-Time Test"),
+            new TestCaseModel(
+                "ip_date",
+                "Date Test",
+                false,
+                {
+                    min:new Date(now.getFullYear() - 5, 0, 1),
+                    max:new Date(now.getFullYear() + 5, 11, 31)
+                }
+            ),
+            new TestCaseModel(
+                "ip_time",
+                "Time Test",
+                false,
+                {
+                    min:new Date(now.setHours(10, 30)),
+                    max:new Date(now.setHours(18, 59))
+                }
+            ),
+            new TestCaseModel(
+                "ip_datetime",
+                "Date-Time Test",
+                false,
+                {}
+            ),
         ];
 
         let initialBotMsgs = [
@@ -253,25 +277,23 @@ $(document).ready(function () {
         switch (curTestCase.id){
             case "ip_date" :
                 $(this.scrollerEle).mobiscroll().date({
-                    onSet: function (event, inst) {
-                        inputView.updateSendState();
-                    }
+                    min:curTestCase.options.min,
+                    max:curTestCase.options.max,
+                    onSet: () => inputView.updateSendState()
                 });
                 break;
 
             case "ip_time" :
                 $(this.scrollerEle).mobiscroll().time({
-                    onSet: function (event, inst) {
-                        inputView.updateSendState();
-                    }
+                    min:curTestCase.options.min,
+                    max:curTestCase.options.max,
+                    onSet: () => inputView.updateSendState()
                 });
                 break;
 
             case "ip_datetime" :
                 $(this.scrollerEle).mobiscroll().datetime({
-                    onSet: function (event, inst) {
-                        inputView.updateSendState();
-                    }
+                    onSet: () => inputView.updateSendState()
                 });
                 break;
         }

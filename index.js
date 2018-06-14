@@ -290,6 +290,22 @@ $(document).ready(function () {
         });
     };
 
+    UtilityView.prototype.disableEsc = function () {
+        $(document).keydown(function(e) {
+            if (e.keyCode === 27) return false;
+        });
+    };
+
+
+    UtilityView.prototype.setScrollGlobalSettings = function () {
+        mobiscroll.settings = {
+            theme: 'ios-dark',
+            cssClass: "wheeler",
+            context: '#mobi-container',
+            buttons:[]
+        };
+    };
+
 
     function InputView() {
         this.inputContainerEle = "#input-container";
@@ -328,8 +344,9 @@ $(document).ready(function () {
 
     ChatView.prototype.init = function () {
         MockNetworkCalls.fetchInitialData();
-
         utilityView.attachUtilityToggler();
+        utilityView.disableEsc();
+        utilityView.setScrollGlobalSettings();
     };
 
 
@@ -382,16 +399,6 @@ $(document).ready(function () {
     ChatView.prototype.removeBotLoader = function () {
         $(this.chatContainerEle + " .bot-chat:last-child").remove();
     };
-
-
-    (function () {                          //Set Global Settings for mobiscroll
-        mobiscroll.settings = {
-            theme: 'ios-dark',
-            cssClass: "wheeler",
-            context: '#mobi-container',
-            buttons:[]
-        };
-    }());
 
 
     let dataModel = new DataModel();

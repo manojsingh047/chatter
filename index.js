@@ -73,7 +73,7 @@ $(document).ready(function () {
             let promise = new Promise((resolve, reject) => {
                 setTimeout(() => {
                     return resolve(dataModel.getinitialBotMsgs());
-                }, 100);
+                }, 1000);
             });
 
             try {
@@ -136,7 +136,6 @@ $(document).ready(function () {
     UtilityView.prototype.hideUtilityContainer = function () {
         this.isUtilityExpanded = false;
         $(this.utilityContainerEle).css({"display": "none"});
-        // $(this.utilityContainerEle).css({"height": "0"});
         $(chatView.chatContainerEle).animate({
             "height": "91%"
         }, 300);
@@ -203,10 +202,19 @@ $(document).ready(function () {
             if($(inputView.inputEle).val().length === 0){
                 return false;
             }
+            chatView.renderMyMsgs($(inputView.inputEle).val());
 
             if(this.isScrolleOn){
                 dataModel.removeTestCase();
-                this.renderUtilitySelectors(dataModel.getTestCases());
+
+                this.hideUtilityContainer();
+                chatView.renderBotLoader();
+
+                setTimeout(() => {
+                    chatView.removeBotLoader();
+                    this.renderUtilitySelectors(dataModel.getTestCases());
+                },1000);
+
                 this.hideMobiContainer();
             }else{
                 this.hideCasesBox();
@@ -215,8 +223,8 @@ $(document).ready(function () {
             this.isScrolleOn = !this.isScrolleOn;
 
 
-            chatView.renderMyMsgs($(inputView.inputEle).val());
             inputView.clearInputVal();
+            inputView.updateSendState();
 
         });
     };
@@ -241,15 +249,27 @@ $(document).ready(function () {
         let curTestCase = dataModel.getActiveTestCase();
         switch (curTestCase.id){
             case "ip_date" :
-                $("#scroller").mobiscroll().date();
+                $("#scroller").mobiscroll().date({
+                    onSet: function (event, inst) {
+                        inputView.updateSendState();
+                    }
+                });
                 break;
 
             case "ip_time" :
-                $("#scroller").mobiscroll().time();
+                $("#scroller").mobiscroll().time({
+                    onSet: function (event, inst) {
+                        inputView.updateSendState();
+                    }
+                });
                 break;
 
             case "ip_datetime" :
-                $("#scroller").mobiscroll().datetime();
+                $("#scroller").mobiscroll().datetime({
+                    onSet: function (event, inst) {
+                        inputView.updateSendState();
+                    }
+                });
                 break;
         }
 

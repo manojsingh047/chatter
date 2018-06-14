@@ -33,9 +33,6 @@ $(document).ready(function () {
             getSingleTestCases: function (id) {
                 return testCases.find(testCase => testCase.id === id);
             },
-            isActive : function (id) {
-                return this.getSingleTestCases(id).isSelected;
-            },
             toggleSelected: function (id) {
                 testCases.forEach(testCase => {
                     if(testCase.id === id){

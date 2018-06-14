@@ -54,14 +54,14 @@ body > div {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
-#chats-container:hover{
+#main-container #chats-container:hover{
     overflow-y: scroll;
 }
-#chats-container .chat {
+#main-container #chats-container .chat {
     margin: 5px 0;
     width: 80%;
 }
-#chats-container .msg{
+#main-container #chats-container .msg{
     border-top-left-radius: 1.3em;
     border-top-right-radius: 1.3em;
     border-bottom-left-radius: 1.3em;
@@ -69,35 +69,37 @@ body > div {
     padding: 12px;
     font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
 }
-#chats-container .bot-chat span{
+#main-container #chats-container .bot-chat span{
     color: #333;
     border-top-left-radius: 0;
 
     background-color: #f1f1f1;
 }
-#chats-container .my-chat span{
+#main-container #chats-container .my-chat span{
     color: #fff;
     border-top-right-radius: 0;
-    background-color: #0084ff;
+    background: #c94b4b;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #4b134f, #c94b4b);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #4b134f, #c94b4b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
-#chats-container .my-chat{
+#main-container #chats-container .my-chat{
     justify-content: flex-end;
     margin-left: auto;
 }
-#chats-container .bot-chat{
+#main-container #chats-container .bot-chat{
     justify-content: flex-start;
     margin-right: auto;
 }
-#input-container{
+#main-container #input-container{
     height: 8%;
 }
 
-#input-container #input-box{
+#main-container #input-container #input-box{
     position: relative;
     width: 97%;
     margin: 0 auto;
 }
-#input-container #input-box input{
+#main-container #input-container #input-box input{
     background-color: rgb(241, 241, 241);
     padding: 12px 6px 12px 20px;
     font-size: 18px;
@@ -112,37 +114,35 @@ body > div {
 }
 
 
-#input-container #input-box i{
+#main-container #input-container #input-box i{
     font-size: 22px;
     color: #777;
 }
 
-#input-container #input-box i.active{
-    color: #0084ff;
+#main-container #input-container #input-box i.active{
+    color: #2E86C1;
 }
 
-#input-container #input-box #plane-box{
+#main-container #input-container #input-box #plane-box{
     position: absolute;
     right: 0px;
     top: 0;
     padding: 11px 15px 11px 10px;
+    cursor: pointer;
 }
 
-
-
-#utility-container{
+#main-container #utility-container{
     display: none;
-    /*height: 42%;*/
     border-radius: 5px;
 }
 
-div#wave {
+#main-container div#wave {
     position: relative;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
 }
-div#wave .dot {
+#main-container div#wave .dot {
     display: inline-block;
     width: 8px;
     height: 8px;
@@ -151,10 +151,10 @@ div#wave .dot {
     background: #303131;
     animation: wave 1.3s linear infinite;
 }
-div#wave .dot:nth-child(2) {
+#main-container div#wave .dot:nth-child(2) {
     animation-delay: -1.1s;
 }
-div#wave .dot:nth-child(3) {
+#main-container div#wave .dot:nth-child(3) {
     animation-delay: -0.9s;
 }
 
@@ -167,36 +167,36 @@ div#wave .dot:nth-child(3) {
     }
 }
 
-.test-cases{
+#main-container .test-cases{
     font-weight: 700;
     text-align: center;
     color: #fff;
-    background-color: #0084ff;
+    background: #c94b4b;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #4b134f, #c94b4b);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #4b134f, #c94b4b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     cursor: pointer;
     border-radius: 50px;
     box-shadow: 1px 1px 4px grey;
     width: 80%;
     margin:10px auto;
     padding: 10px;
-    border: 3px solid #0084ff;
-    transition-duration: 0.4s;
+    border: 3px solid #7b134c;
 }
-.selected-test{
-    background-color: #FF9700;
-    border-color: #FF9700;
-}
-.test-cases:hover{
-    border: 3px solid #0084ff;
+#main-container .test-cases:hover{
+    border: 3px solid #7b134c;
     background: #fff;
-    color: #0084ff ;
-    transition-duration: 0.4s;
+    color: #7b134c ;
 }
-#mobi-container{
+#main-container .selected-test{
+    background: #5DADE2;
+    border-color: #5DADE2;
+}
+#main-container #mobi-container{
     height: 199px;
     overflow: hidden;
     display: none;
 }
-.test-cases:first-child{
+#main-container .test-cases:first-child{
     margin-top: 20px;
 }
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */

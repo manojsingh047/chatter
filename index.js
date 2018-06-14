@@ -122,6 +122,7 @@ $(document).ready(function () {
             "height": "60%"
         }, () => {
             $(this.utilityContainerEle).css({"display": "block"});
+            chatView.scrollToBottom();
         });
 
     };
@@ -215,7 +216,7 @@ $(document).ready(function () {
                 setTimeout(() => {
                     chatView.removeBotLoader();
                     this.renderUtilitySelectors(dataModel.getTestCases());
-                },1000);
+                },2000);
 
                 this.hideMobiContainer();
             }else{
@@ -379,11 +380,11 @@ $(document).ready(function () {
             return false;
 
         $(this.getMyMsgHtml(msg)).hide().appendTo(this.chatContainerEle).fadeIn(500);
-        this.scrollToBottom(this.chatContainerEle);
+        this.scrollToBottom();
     };
 
-    ChatView.prototype.scrollToBottom = function (ele) {
-        $(ele).animate({ scrollTop: $(ele).prop("scrollHeight") });
+    ChatView.prototype.scrollToBottom = function () {
+        $(this.chatContainerEle).animate({ scrollTop: $(this.chatContainerEle).prop("scrollHeight") });
     };
 
     ChatView.prototype.renderBotLoader = function () {

@@ -42,7 +42,7 @@ $(document).ready(function () {
             ),
         ];
 
-        let initialBotMsgs = [
+        const initialBotMsgs = [
             `Hello team Tars !`,
             `Hope you are having a great day.`,
             `In the section below your are provided with set of options 

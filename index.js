@@ -19,10 +19,11 @@ $(document).ready(function () {
         ];
 
         let initialBotMsgs = [
-            "Hey There",
-            "How are you doing?",
-            "How are you doing1?",
-            "How are you doing1?"
+            `Hello team Tars !`,
+            `Hope you are having a great day.`,
+            `In the section below your are provided with set of options 
+            to test various inputs.`,
+            `Go ahead and play with it.`
         ];
 
 
@@ -78,7 +79,10 @@ $(document).ready(function () {
                 let result = await promise;
                 chatView.removeBotLoader();
                 chatView.renderBotMsgs(result);
-                this.fetchTestCases();
+
+                setTimeout(() => {
+                    this.fetchTestCases();
+                }, 500);
             }
             catch (err) {
                 console.error(err);
@@ -104,6 +108,7 @@ $(document).ready(function () {
         this.utilityContainerEle = "#utility-container";
         this.casesBoxEle = "#utility-container #cases-box";
         this.mobiContainerEle = "#mobi-container";
+        this.scrollerEle = "#scroller";
         this.shouldToggleUtility = false;
         this.isUtilityExpanded = false;
         this.isScrolleOn = false;
@@ -246,7 +251,7 @@ $(document).ready(function () {
         let curTestCase = dataModel.getActiveTestCase();
         switch (curTestCase.id){
             case "ip_date" :
-                $("#scroller").mobiscroll().date({
+                $(this.scrollerEle).mobiscroll().date({
                     onSet: function (event, inst) {
                         inputView.updateSendState();
                     }
@@ -254,7 +259,7 @@ $(document).ready(function () {
                 break;
 
             case "ip_time" :
-                $("#scroller").mobiscroll().time({
+                $(this.scrollerEle).mobiscroll().time({
                     onSet: function (event, inst) {
                         inputView.updateSendState();
                     }
@@ -262,7 +267,7 @@ $(document).ready(function () {
                 break;
 
             case "ip_datetime" :
-                $("#scroller").mobiscroll().datetime({
+                $(this.scrollerEle).mobiscroll().datetime({
                     onSet: function (event, inst) {
                         inputView.updateSendState();
                     }
@@ -270,7 +275,7 @@ $(document).ready(function () {
                 break;
         }
 
-        $('#scroller').mobiscroll('show');
+        $(this.scrollerEle).mobiscroll('show');
 
     };
 

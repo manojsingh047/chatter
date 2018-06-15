@@ -211,3 +211,11 @@ body > div {
 :-ms-input-placeholder { /* Microsoft Edge */
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
+
+@media only screen and (max-width: 500px) {
+    #main-container {
+        max-height: initial;
+        height: 100%;
+        width: 100%;
+    }
+}

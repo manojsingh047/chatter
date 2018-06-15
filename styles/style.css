@@ -212,7 +212,7 @@ body > div {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 768px) {
     #main-container {
         max-height: initial;
         height: 100%;

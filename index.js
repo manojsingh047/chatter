@@ -38,7 +38,9 @@ $(document).ready(function () {
                 "ip_datetime",
                 "Date-Time Test",
                 false,
-                {}
+                {
+                    dateWheels: '|D M d|'
+                }
             ),
         ];
 
@@ -79,8 +81,7 @@ $(document).ready(function () {
                 return testCases.find(testCase => testCase.isSelected);
             },
             removeTestCase: function () {
-                let testCaseIndex = testCases.findIndex(
-                    testCase => this.getActiveTestCase().id === testCase.id);
+                let testCaseIndex = testCases.findIndex(testCase => this.getActiveTestCase().id === testCase.id);
 
                 this.getTestCases().splice(testCaseIndex,1);
             },
@@ -293,6 +294,7 @@ $(document).ready(function () {
 
             case "ip_datetime" :
                 $(this.scrollerEle).mobiscroll().datetime({
+                    dateWheels: curTestCase.options.dateWheels,
                     onSet: () => inputView.updateSendState()
                 });
                 break;

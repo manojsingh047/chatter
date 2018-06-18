@@ -20,8 +20,6 @@ body {
     overflow-x: hidden;
     background-color: rgb(67, 74, 84);
     font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
-
-    /*transition: 0.3s ease-out;*/
 }
 
 body > div {

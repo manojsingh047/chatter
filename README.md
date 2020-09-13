@@ -1,1 +1,1 @@
-# A simple chatting interface with a chat assistant
+# A mobile friendly chatting interface with a chat assistant

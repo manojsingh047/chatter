@@ -45,7 +45,7 @@ $(document).ready(function () {
         ];
 
         const initialBotMsgs = [
-            `Hello team Tars !`,
+            `Hey there !`,
             `Hope you are having a great day.`,
             `In the section below your are provided with set of options 
             to test various inputs.`,

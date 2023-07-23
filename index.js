@@ -3,44 +3,31 @@
 
 $(document).ready(function () {
 
-    function TestCaseModel(id, name, isSelected, options) {
+    function TestCaseModel(id, name, isSelected) {
         this.id = id;
         this.name = name;
         this.isSelected = isSelected;
-        this.options = options
     }
 
 
     function DataModel() {
-
-        let now = new Date();
-
         let testCases = [
             new TestCaseModel(
-                "ip_date",
-                "Date Test",
+                "test1",
+                "Test1",
                 false,
-                {
-                    min:new Date(now.getFullYear() - 5, 0, 1),
-                    max:new Date(now.getFullYear() + 5, 11, 31)
-                }
+                
             ),
             new TestCaseModel(
-                "ip_time",
-                "Time Test",
+                "test2",
+                "Test2",
                 false,
-                {
-                    min:new Date(now.setHours(10, 30)),
-                    max:new Date(now.setHours(18, 59))
-                }
+                
             ),
             new TestCaseModel(
-                "ip_datetime",
-                "Date-Time Test",
+                "test3",
+                "Test3",
                 false,
-                {
-                    dateWheels: '|D M d|'
-                }
             ),
         ];
 
@@ -53,7 +40,7 @@ $(document).ready(function () {
         ];
 
 
-        
+
         return {
             getTestCases: function () {
                 return testCases;
@@ -63,14 +50,14 @@ $(document).ready(function () {
             },
             toggleSelected: function (id) {
                 testCases.forEach(testCase => {
-                    if(testCase.id === id){
+                    if (testCase.id === id) {
                         testCase.isSelected = !testCase.isSelected;
                     }
                 });
             },
             removeSelected: function (id) {
                 this.getTestCases().forEach(testCase => {
-                    if(testCase.id !== id){
+                    if (testCase.id !== id) {
                         testCase.isSelected = false;
                     }
                 });
@@ -84,7 +71,7 @@ $(document).ready(function () {
             removeTestCase: function () {
                 let testCaseIndex = testCases.findIndex(testCase => this.getActiveTestCase().id === testCase.id);
 
-                this.getTestCases().splice(testCaseIndex,1);
+                this.getTestCases().splice(testCaseIndex, 1);
             },
 
         };
@@ -147,44 +134,44 @@ $(document).ready(function () {
         $(chatView.chatContainerEle).animate({
             "height": "60%"
         }, () => {
-            $(this.utilityContainerEle).css({"display": "block"});
+            $(this.utilityContainerEle).css({ "display": "block" });
             chatView.scrollToBottom();
         });
 
     };
 
     UtilityView.prototype.showMobiContainer = function () {
-            $(this.mobiContainerEle).css({"display": "block"});
+        $(this.mobiContainerEle).css({ "display": "block" });
     };
 
     UtilityView.prototype.hideMobiContainer = function () {
-            $(this.mobiContainerEle).css({"display": "none"});
+        $(this.mobiContainerEle).css({ "display": "none" });
     };
 
 
     UtilityView.prototype.hideUtilityContainer = function () {
         this.isUtilityExpanded = false;
-        $(this.utilityContainerEle).css({"display": "none"});
+        $(this.utilityContainerEle).css({ "display": "none" });
         $(chatView.chatContainerEle).animate({
             "height": "91%"
         }, 300);
     };
 
     UtilityView.prototype.hideCasesBox = function () {
-        $(this.casesBoxEle).css({"display": "none"});
+        $(this.casesBoxEle).css({ "display": "none" });
     };
 
     UtilityView.prototype.showCasesBox = function () {
-        $(this.casesBoxEle).css({"display": "block"});
+        $(this.casesBoxEle).css({ "display": "block" });
     };
 
     UtilityView.prototype.attachUtilityToggler = function () {
         $(inputView.inputContainerEle).on('click', () => {
             if (this.canToggleUtility()) {
 
-                if(this.isUtilityExpanded){
+                if (this.isUtilityExpanded) {
                     this.hideUtilityContainer();
-                } else{
+                } else {
                     this.expandUtilityContainer();
                 }
 
@@ -206,7 +193,7 @@ $(document).ready(function () {
 
         let testCasesHtml = "";
 
-        if(testCases.length === 0){
+        if (testCases.length === 0) {
             this.hideUtilityContainer();
             this.shouldToggleUtility = false;
             return;
@@ -226,14 +213,29 @@ $(document).ready(function () {
 
     UtilityView.prototype.attachTestSendEvent = function () {
 
-        $(inputView.sendBoxEle).on('click',(event) => {
+        $(inputView.sendBoxEle).on('click', (event) => {
             event.stopPropagation();
-            if($(inputView.inputEle).val().length === 0){
+            if ($(inputView.inputEle).val().length === 0) {
                 return false;
             }
             chatView.renderMyMsgs($(inputView.inputEle).val());
+            inputView.clearInputVal();
 
-            if(this.isScrolleOn){
+
+            dataModel.removeTestCase();
+            this.hideUtilityContainer();
+            chatView.renderBotLoader();
+
+            setTimeout(() => {
+                chatView.removeBotLoader();
+
+                this.renderUtilitySelectors(dataModel.getTestCases());
+                chatView.renderBotMsgs(["asdasd", "asdasd"]);
+
+            }, 2000);
+
+            return;
+            if (this.isScrolleOn) {
                 dataModel.removeTestCase();
 
                 this.hideUtilityContainer();
@@ -242,10 +244,10 @@ $(document).ready(function () {
                 setTimeout(() => {
                     chatView.removeBotLoader();
                     this.renderUtilitySelectors(dataModel.getTestCases());
-                },2000);
+                }, 2000);
 
                 this.hideMobiContainer();
-            }else{
+            } else {
                 this.hideCasesBox();
                 this.renderScroller();
             }
@@ -276,33 +278,6 @@ $(document).ready(function () {
         chatView.removeBotLoader();
 
         let curTestCase = dataModel.getActiveTestCase();
-        switch (curTestCase.id){
-            case "ip_date" :
-                $(this.scrollerEle).mobiscroll().date({
-                    min:curTestCase.options.min,
-                    max:curTestCase.options.max,
-                    onSet: () => inputView.updateSendState()
-                });
-                break;
-
-            case "ip_time" :
-                $(this.scrollerEle).mobiscroll().time({
-                    min:curTestCase.options.min,
-                    max:curTestCase.options.max,
-                    onSet: () => inputView.updateSendState()
-                });
-                break;
-
-            case "ip_datetime" :
-                $(this.scrollerEle).mobiscroll().datetime({
-                    dateWheels: curTestCase.options.dateWheels,
-                    onSet: () => inputView.updateSendState()
-                });
-                break;
-        }
-
-        $(this.scrollerEle).mobiscroll('show');
-
     };
 
     UtilityView.prototype.updateTestCasesState = function (id) {
@@ -315,26 +290,16 @@ $(document).ready(function () {
 
     UtilityView.prototype.removeSelectedFromCase = function (id) {
         dataModel.getTestCases().forEach(testCase => {
-            if(testCase.id !== id){
+            if (testCase.id !== id) {
                 $(this.casesBoxEle + ' ' + '#' + testCase.id).removeClass("selected-test");
             }
         });
     };
 
     UtilityView.prototype.disableEsc = function () {
-        $(document).keydown(function(e) {
+        $(document).keydown(function (e) {
             if (e.keyCode === 27) return false;
         });
-    };
-
-
-    UtilityView.prototype.setScrollGlobalSettings = function () {
-        mobiscroll.settings = {
-            theme: 'ios-dark',
-            cssClass: "wheeler",
-            context: '#mobi-container',
-            buttons:[]
-        };
     };
 
 
@@ -352,10 +317,10 @@ $(document).ready(function () {
 
     InputView.prototype.updateSendState = function () {
         this.inputEleIsActive = $(this.inputEle).val().length > 0;
-        if(this.inputEleIsActive){
+        if (this.inputEleIsActive) {
             $(this.sendEle).hide().fadeIn(500);
             $(this.sendEle).addClass('active');
-        }else{
+        } else {
             $(this.sendEle).hide().fadeIn(500);
             $(this.sendEle).removeClass('active');
         }
@@ -377,7 +342,6 @@ $(document).ready(function () {
         MockNetworkCalls.fetchInitialData();
         utilityView.attachUtilityToggler();
         utilityView.disableEsc();
-        utilityView.setScrollGlobalSettings();
     };
 
 
@@ -401,7 +365,7 @@ $(document).ready(function () {
 
     ChatView.prototype.renderMyMsgs = function (msg) {
 
-        if(msg.length === 0)
+        if (msg.length === 0)
             return false;
 
         $(this.getMyMsgHtml(msg)).hide().appendTo(this.chatContainerEle).fadeIn(500);

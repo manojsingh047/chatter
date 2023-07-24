@@ -99,7 +99,7 @@ body > div {
 }
 #main-container #input-container #input-box input{
     background-color: rgb(241, 241, 241);
-    padding: 12px 6px 12px 20px;
+    padding: 12px 40px 12px 20px;
     font-size: 18px;
     outline: none;
     border-radius: 24px;
@@ -108,7 +108,6 @@ body > div {
     margin: 0 auto;
     width: 100%;
     display: block;
-    cursor: pointer;
     color: #333;
 }
 

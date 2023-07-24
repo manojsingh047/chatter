@@ -1,73 +1,9 @@
 "use strict";
 
-import { ACTION, fetchApi } from "./utils";
+import { DataModel } from "./data-model";
+import { fetchApi } from "./utils";
 
 $(document).ready(function () {
-    function TestCaseModel(id, name, isSelected) {
-        this.id = id;
-        this.name = name;
-        this.isSelected = isSelected;
-    }
-
-
-    function DataModel() {
-        let testCases = [
-            new TestCaseModel(
-                ACTION.mom.key,
-                ACTION.mom.label,
-                false,
-
-            ),
-            new TestCaseModel(
-                ACTION.retro.key,
-                ACTION.retro.label,
-                false,
-
-            ),
-            new TestCaseModel(
-                ACTION.story.key,
-                ACTION.story.label,
-                false,
-            ),
-        ];
-
-        return {
-            getTestCases: function () {
-                return testCases;
-            },
-            getSingleTestCases: function (id) {
-                return testCases.find(testCase => testCase.id === id);
-            },
-            toggleSelected: function (id) {
-                testCases.forEach(testCase => {
-                    if (testCase.id === id) {
-                        testCase.isSelected = !testCase.isSelected;
-                    }
-                });
-            },
-            removeSelected: function (id) {
-                this.getTestCases().forEach(testCase => {
-                    if (testCase.id !== id) {
-                        testCase.isSelected = false;
-                    }
-                });
-            },
-            getActiveTestCase: function () {
-                return testCases.find(testCase => testCase.isSelected);
-            },
-            removeTestCase: function () {
-                let activeTestCase = this.getActiveTestCase();
-                if (!activeTestCase) {
-                    return;
-                }
-                let testCaseIndex = testCases.findIndex(testCase => activeTestCase.id === testCase.id);
-
-                this.getTestCases().splice(testCaseIndex, 1);
-            },
-
-        };
-
-    }
 
     function UtilityView() {
         this.utilityContainerEle = "#utility-container";
@@ -116,19 +52,19 @@ $(document).ready(function () {
         $(this.casesBoxEle).css({ "display": "block" });
     };
 
-    UtilityView.prototype.attachUtilityToggler = function () {
-        $(inputView.inputContainerEle).on('click', () => {
-            if (this.canToggleUtility()) {
+    // UtilityView.prototype.attachUtilityToggler = function () {
+    //     $(inputView.inputContainerEle).on('click', () => {
+    //         if (this.canToggleUtility()) {
 
-                if (this.isUtilityExpanded) {
-                    this.hideUtilityContainer();
-                } else {
-                    this.expandUtilityContainer();
-                }
+    //             if (this.isUtilityExpanded) {
+    //                 this.hideUtilityContainer();
+    //             } else {
+    //                 this.expandUtilityContainer();
+    //             }
 
-            }
-        });
-    };
+    //         }
+    //     });
+    // };
 
     UtilityView.prototype.canToggleUtility = function () {
         return this.shouldToggleUtility;
@@ -245,7 +181,7 @@ $(document).ready(function () {
 
     ChatView.prototype.init = function () {
         chatView.fetchAndRenderBotMsgs('initial');
-        utilityView.attachUtilityToggler();
+        // utilityView.attachUtilityToggler();
         utilityView.disableEsc();
     };
 

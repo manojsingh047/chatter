@@ -1,8 +1,8 @@
 "use strict";
 
+import { ACTION, fetchApi } from "./utils";
 
 $(document).ready(function () {
-
     function TestCaseModel(id, name, isSelected) {
         this.id = id;
         this.name = name;
@@ -13,33 +13,23 @@ $(document).ready(function () {
     function DataModel() {
         let testCases = [
             new TestCaseModel(
-                "test1",
-                "Test1",
+                ACTION.mom.key,
+                ACTION.mom.label,
                 false,
-                
+
             ),
             new TestCaseModel(
-                "test2",
-                "Test2",
+                ACTION.retro.key,
+                ACTION.retro.label,
                 false,
-                
+
             ),
             new TestCaseModel(
-                "test3",
-                "Test3",
+                ACTION.story.key,
+                ACTION.story.label,
                 false,
             ),
         ];
-
-        const initialBotMsgs = [
-            `Hey there !`,
-            `Hope you are having a great day.`,
-            `In the section below your are provided with set of options 
-            to test various inputs.`,
-            `Go ahead and play with it.`
-        ];
-
-
 
         return {
             getTestCases: function () {
@@ -62,14 +52,15 @@ $(document).ready(function () {
                     }
                 });
             },
-            getinitialBotMsgs: function () {
-                return initialBotMsgs;
-            },
             getActiveTestCase: function () {
                 return testCases.find(testCase => testCase.isSelected);
             },
             removeTestCase: function () {
-                let testCaseIndex = testCases.findIndex(testCase => this.getActiveTestCase().id === testCase.id);
+                let activeTestCase = this.getActiveTestCase();
+                if (!activeTestCase) {
+                    return;
+                }
+                let testCaseIndex = testCases.findIndex(testCase => activeTestCase.id === testCase.id);
 
                 this.getTestCases().splice(testCaseIndex, 1);
             },
@@ -77,45 +68,6 @@ $(document).ready(function () {
         };
 
     }
-
-    let MockNetworkCalls = {
-
-        fetchInitialData: async function () {
-            let promise = new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    return resolve(dataModel.getinitialBotMsgs());
-                }, 1000);
-            });
-
-            try {
-                chatView.renderBotLoader();
-                let result = await promise;
-                chatView.removeBotLoader();
-                chatView.renderBotMsgs(result);
-
-                setTimeout(() => {
-                    this.fetchTestCases();
-                }, 500);
-            }
-            catch (err) {
-                console.error(err);
-            }
-        },
-
-        fetchTestCases: async function () {
-            let promise = new Promise((resolve, reject) => {
-                return resolve(dataModel.getTestCases());
-            });
-
-            try {
-                let result = await promise;
-                utilityView.renderUtilitySelectors(result);
-            }
-            catch (err) {
-                console.error(err);
-            }
-        },
-    };
 
     function UtilityView() {
         this.utilityContainerEle = "#utility-container";
@@ -125,7 +77,6 @@ $(document).ready(function () {
         this.shouldToggleUtility = false;
         this.isUtilityExpanded = false;
         this.isScrolleOn = false;
-
     }
 
 
@@ -220,48 +171,13 @@ $(document).ready(function () {
             }
             chatView.renderMyMsgs($(inputView.inputEle).val());
             inputView.clearInputVal();
-
-
-            dataModel.removeTestCase();
             this.hideUtilityContainer();
-            chatView.renderBotLoader();
 
-            setTimeout(() => {
-                chatView.removeBotLoader();
-
-                this.renderUtilitySelectors(dataModel.getTestCases());
-                chatView.renderBotMsgs(["asdasd", "asdasd"]);
-
-            }, 2000);
-
+            const activeCase = dataModel.getActiveTestCase();
+            chatView.fetchAndRenderBotMsgs(activeCase.id);
             return;
-            if (this.isScrolleOn) {
-                dataModel.removeTestCase();
-
-                this.hideUtilityContainer();
-                chatView.renderBotLoader();
-
-                setTimeout(() => {
-                    chatView.removeBotLoader();
-                    this.renderUtilitySelectors(dataModel.getTestCases());
-                }, 2000);
-
-                this.hideMobiContainer();
-            } else {
-                this.hideCasesBox();
-                this.renderScroller();
-            }
-            this.isScrolleOn = !this.isScrolleOn;
-
-
-            inputView.clearInputVal();
-            inputView.updateSendState();
-
         });
     };
-
-
-
 
     UtilityView.prototype.attachTestCasesEvent = function () {
         $(this.casesBoxEle + ' .test-cases').on('click', function () {
@@ -271,22 +187,12 @@ $(document).ready(function () {
         });
     };
 
-    UtilityView.prototype.renderScroller = function () {
-
-        chatView.renderBotLoader();
-        utilityView.showMobiContainer();
-        chatView.removeBotLoader();
-
-        let curTestCase = dataModel.getActiveTestCase();
-    };
-
     UtilityView.prototype.updateTestCasesState = function (id) {
         dataModel.toggleSelected(id);
         dataModel.removeSelected(id);
         inputView.toggleInputValue(dataModel.getSingleTestCases(id));
         utilityView.removeSelectedFromCase(id);
     };
-
 
     UtilityView.prototype.removeSelectedFromCase = function (id) {
         dataModel.getTestCases().forEach(testCase => {
@@ -301,7 +207,6 @@ $(document).ready(function () {
             if (e.keyCode === 27) return false;
         });
     };
-
 
     function InputView() {
         this.inputContainerEle = "#input-container";
@@ -339,7 +244,7 @@ $(document).ready(function () {
     }
 
     ChatView.prototype.init = function () {
-        MockNetworkCalls.fetchInitialData();
+        chatView.fetchAndRenderBotMsgs('initial');
         utilityView.attachUtilityToggler();
         utilityView.disableEsc();
     };
@@ -355,6 +260,16 @@ $(document).ready(function () {
         msgs.forEach((msg) => {
             $(this.getBotMsgHtml(msg)).hide().appendTo(this.chatContainerEle).fadeIn(500);
         });
+    };
+
+    ChatView.prototype.fetchAndRenderBotMsgs = async function (id) {
+        chatView.renderBotLoader();
+        const res = await fetchApi(id);
+        dataModel.removeTestCase();
+        chatView.removeBotLoader();
+        utilityView.renderUtilitySelectors(dataModel.getTestCases());
+
+        chatView.renderBotMsgs(res.messages);
     };
 
     ChatView.prototype.getMyMsgHtml = function (msg) {

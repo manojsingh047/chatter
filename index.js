@@ -1,6 +1,6 @@
 "use strict";
 
-
+console.log("hey hey hey");
 $(document).ready(function () {
 
     function TestCaseModel(id, name, isSelected, options) {
